@@ -1,4 +1,4 @@
-package rskupnik.parrot;
+package com.github.rskupnik.parrot;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -22,6 +22,19 @@ public class Parrot {
                     }
                 }
         );
+
+        try {
+            Files.list(Paths.get(System.getProperty("user.dir")))
+                    .forEach(path -> {
+                        String fileName = path.getFileName().toString();
+
+                        if (fileName.endsWith(".properties")) {
+                            ingest(path.toFile());
+                        }
+                    });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static Optional<String> get(String property) {
