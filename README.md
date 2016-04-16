@@ -1,6 +1,6 @@
 # Parrot
 
-Parrot is a property-files abstraction layer that aims to simplify the usage of various property files.
+Parrot is a property-files abstraction layer that aims to simplify the usage of multiple property files.
 
 It's very simple - Parrot loads every .properties file from the classpath and from the working directory and makes them available through one simple method.
 
@@ -60,3 +60,15 @@ Parrot is very simple, so there are no examples. However, if you really need som
 [/src/test/resources/test.properties](https://github.com/rskupnik/parrot/blob/master/src/test/resources/test.properties)
 
 [/testUserDir.properties](https://github.com/rskupnik/parrot/blob/master/testUserDir.properties)
+
+## Rationale
+
+When starting any new small hobby project I always use properties files. But these files require me to write some boilerplate code that will read them from the classpath/directory and expose the properties I'm interested in.
+
+I've grown tired of writing this code over and over again so I created Parrot to take care of that for me so I can just use the properties I want from the get-go.
+
+## Future
+
+* Support for other propery files, such as YAML or XML
+* Support for other variable types than String, so the users don't have to perform casts themselves
+* Support for overlapping properties (i.e. the same property names defined in different files), probably through namespaces
