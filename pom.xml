@@ -39,12 +39,18 @@
             </plugin>
         </plugins>
     </build>
+	
+	<profiles>
+		<profile>
+			<id>local-repo</id>
+			<distributionManagement>
+				<repository>
+					<id>internal.repo</id>
+					<name>Temporary Staging Repository</name>
+					<url>file://${project.build.directory}\..\..\..\maven-repo</url>
+				</repository>
+			</distributionManagement>
+		</profile>
+	</profiles>
 
-    <distributionManagement>
-        <repository>
-            <id>internal.repo</id>
-            <name>Temporary Staging Repository</name>
-            <url>file://${project.build.directory}\..\..\..\maven-repo</url>
-        </repository>
-    </distributionManagement>
 </project>
