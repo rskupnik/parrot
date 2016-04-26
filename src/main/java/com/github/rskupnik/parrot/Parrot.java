@@ -62,7 +62,7 @@ public class Parrot {
         List<File> filesList = new ArrayList<File>();
         for (final String path : paths.split(File.pathSeparator)) {
             final File file = new File(path);
-            if( file.isDirectory()) {
+            if (file.isDirectory()) {
                 recurse(filesList, file);
             }
             else {
