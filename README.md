@@ -1,4 +1,4 @@
-# Parrot
+## Parrot
 
 Parrot is a property-files abstraction layer that aims to simplify the usage of multiple property files.
 
@@ -21,7 +21,13 @@ Map<String, String> allParameters = Parrot.all();
 
 ## How to get it?
 
-Since it is not yet available on Maven central, you'll need to add my private github-based repository to your repositories...
+# Option 1
+
+`git clone` -> `mvn install`
+ 
+# Option 2
+
+Since it is not yet available on Maven central, you'll need to add my private github-based repository to your repositories.
 
 ```
 <repositories>
@@ -35,7 +41,7 @@ Since it is not yet available on Maven central, you'll need to add my private gi
 </repositories>
 ```
 
-... and then you can just add a dependency as any other:
+And then you can just add a dependency as any other:
 
 ```
 <dependencies>
@@ -49,7 +55,9 @@ Since it is not yet available on Maven central, you'll need to add my private gi
 </dependencies>
 ```
 
-Or you can just `git clone` it and run `mvn install`.
+# Option 3
+
+Simply copy the contents of the [Parrot.java](https://github.com/rskupnik/parrot/blob/master/src/main/java/com/github/rskupnik/parrot/Parrot.java) somewhere into your project and use it!
 
 ## Examples?
 
