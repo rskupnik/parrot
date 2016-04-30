@@ -1,4 +1,4 @@
-## Parrot
+# Parrot
 
 Parrot is a property-files abstraction layer that aims to simplify the usage of multiple property files.
 
@@ -19,13 +19,13 @@ Map<String, String> allParameters = Parrot.all();
 
 ... and you're done. Just put your .properties files either in resources or at the root directory and use the parameters freely.
 
-## How to get it?
+# How to get it?
 
-# Option 1
+### Option 1
 
 `git clone` -> `mvn install`
  
-# Option 2
+### Option 2
 
 Since it is not yet available on Maven central, you'll need to add my private github-based repository to your repositories.
 
@@ -55,11 +55,11 @@ And then you can just add a dependency as any other:
 </dependencies>
 ```
 
-# Option 3
+### Option 3
 
 Simply copy the contents of the [Parrot.java](https://github.com/rskupnik/parrot/blob/master/src/main/java/com/github/rskupnik/parrot/Parrot.java) somewhere into your project and use it!
 
-## Examples?
+# Examples?
 
 Parrot is very simple, so there are no examples. However, if you really need some, look at these files in the project:
 
@@ -69,14 +69,14 @@ Parrot is very simple, so there are no examples. However, if you really need som
 
 [/testUserDir.properties](https://github.com/rskupnik/parrot/blob/master/testUserDir.properties)
 
-## Rationale
+# Rationale
 
 When starting any new small hobby project I always use properties files. But these files require me to write some boilerplate code that will read them from the classpath/directory and expose the properties I'm interested in.
 
 I've grown tired of writing this code over and over again so I created Parrot to take care of that for me so I can just use the properties I want from the get-go.
 
-## Future
+# Future
 
-* Support for other propery files, such as YAML or XML
+* Support for other propery file formats, such as YAML or XML
 * Support for other variable types than String, so the users don't have to perform casts themselves
 * Support for overlapping properties (i.e. the same property names defined in different files), probably through namespaces
