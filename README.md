@@ -63,7 +63,7 @@ Simply copy the contents of the [Parrot.java](https://github.com/rskupnik/parrot
 
 Parrot is very simple, so there are no examples. However, if you really need some, look at these files in the project:
 
-[/src/test/java/com/github/rskupnik/parrot/ParrotTest.java](https://github.com/rskupnik/parrot/blob/master/src/main/java/com/github/rskupnik/parrot/Parrot.java)
+[/src/test/java/com/github/rskupnik/parrot/ParrotTest.java](https://github.com/rskupnik/parrot/blob/master/src/test/java/com/github/rskupnik/parrot/ParrotTest.java)
 
 [/src/test/resources/test.properties](https://github.com/rskupnik/parrot/blob/master/src/test/resources/test.properties)
 
