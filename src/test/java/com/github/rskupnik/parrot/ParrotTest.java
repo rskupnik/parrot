@@ -20,7 +20,7 @@ public class ParrotTest {
         String param = "test";
 
         // when
-        Parrot parrot = new Parrot();
+        Parrot parrot = Parrot.newInstance();
 
         // then
         assertTrue(parrot.get(param).isPresent());
@@ -35,7 +35,7 @@ public class ParrotTest {
         String invalidParam = "test2";
 
         // when
-        Parrot parrot = new Parrot("test");
+        Parrot parrot = Parrot.newInstance("test");
 
         // then
         assertTrue(parrot.get(param).isPresent());
@@ -51,7 +51,7 @@ public class ParrotTest {
         String invalidParam = "test2";
 
         // when
-        Parrot parrot = new Parrot("test.properties");
+        Parrot parrot = Parrot.newInstance("test.properties");
 
         // then
         assertTrue(parrot.get(param).isPresent());
@@ -66,7 +66,7 @@ public class ParrotTest {
         String param = "testUserDir";
 
         // when
-        Parrot parrot = new Parrot();
+        Parrot parrot = Parrot.newInstance();
 
         // then
         assertTrue(parrot.get(param).isPresent());
@@ -81,7 +81,7 @@ public class ParrotTest {
         String invalidParam = "testUserDir2";
 
         // when
-        Parrot parrot = new Parrot("testUserDir", "test");
+        Parrot parrot = Parrot.newInstance("testUserDir", "test");
 
         // then
         assertTrue(parrot.get(param).isPresent());
@@ -97,7 +97,7 @@ public class ParrotTest {
         String invalidParam = "testUserDir2";
 
         // when
-        Parrot parrot = new Parrot("testUserDir.properties", "test");
+        Parrot parrot = Parrot.newInstance("testUserDir.properties", "test");
 
         // then
         assertTrue(parrot.get(param).isPresent());
@@ -111,9 +111,49 @@ public class ParrotTest {
         String param = "invalidParam";
 
         // when
-        Parrot parrot = new Parrot();
+        Parrot parrot = Parrot.newInstance();
 
         // then
         assertFalse(parrot.get(param).isPresent());
+    }
+
+    @Test
+    public void shouldInitiateTwoSeparateParrots() {
+        // given
+        String param1 = "test";
+        String param2 = "test2";
+        String properOutcome = "passed";
+
+        // when
+        Parrot parrot1 = Parrot.newInstance("test");
+        Parrot parrot2 = Parrot.newInstance("test2");
+
+        // then
+        assertTrue(parrot1.get(param1).isPresent());
+        assertEquals(properOutcome, parrot1.get(param1).get());
+        assertFalse(parrot1.get(param2).isPresent());
+        assertTrue(parrot2.get(param2).isPresent());
+        assertEquals(properOutcome, parrot2.get(param2).get());
+        assertFalse(parrot2.get(param1).isPresent());
+    }
+
+    @Test
+    public void shouldInitiateStaticParrot() {
+        // given
+        String param1 = "test";
+        String param2 = "test2";
+        String properOutcome = "passed";
+
+        // when
+        Parrot parrot1 = Parrot.newInstance("test");
+        Parrot.newInstance("test2");
+
+        // then
+        assertTrue(parrot1.get(param1).isPresent());
+        assertEquals(properOutcome, parrot1.get(param1).get());
+        assertFalse(parrot1.get(param2).isPresent());
+        assertTrue(Parrot.getInstance().get(param2).isPresent());
+        assertEquals(properOutcome, Parrot.getInstance().get(param2).get());
+        assertFalse(Parrot.getInstance().get(param1).isPresent());
     }
 }

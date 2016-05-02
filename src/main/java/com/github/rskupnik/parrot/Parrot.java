@@ -3,24 +3,49 @@ package com.github.rskupnik.parrot;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 
 public class Parrot {
 
+    private static Parrot INSTANCE;
+
+    /**
+     * Receives the newest instance of Parrot that was created by calling
+     * <b>newInstance()</b>.
+     *
+     * @return the newest instance of Parrot
+     */
+    public static Parrot getInstance() {
+        if (INSTANCE == null)
+            newInstance();
+
+        return INSTANCE;
+    }
+
+    /**
+     * Creates a new instance of Parrot and saves it as the current instance.
+     * <br/>
+     * <br/>
+     * The current instance can be withdrawn using <b>getInstance()</b>.
+     * <br/>
+     * <br/>
+     * This allows creating multiple different instances of Parrot or using
+     * it in a static context by just calling <b>Parrot.newInstance()</b> and
+     * then <b>Parrot.getInstance()</b>.
+     *
+     * @param allowedFiles names of files that Parrot is allowed to load
+     * @return a new instance of Parrot
+     */
+    public static Parrot newInstance(String... allowedFiles) {
+        INSTANCE = new Parrot(allowedFiles);
+        return INSTANCE;
+    }
+
     private Map<String, String> properties = new HashMap<String, String>();
 
-    public Parrot() {
-        load();
-    }
-
-    public Parrot(String... allowedFiles) {
-        load(allowedFiles);
-    }
-
-    private void load(String... allowedFiles) {
+    private Parrot(String... allowedFiles) {
         getFiles(System.getProperty("java.class.path"))
                 .forEach(file -> {
                             if (file.getPath().endsWith(".properties")) {
@@ -84,8 +109,7 @@ public class Parrot {
             final File file = new File(path);
             if (file.isDirectory()) {
                 recurse(filesList, file);
-            }
-            else {
+            } else {
                 filesList.add(file);
             }
         }
@@ -97,8 +121,7 @@ public class Parrot {
         for (File file : list) {
             if (file.isDirectory()) {
                 recurse(filesList, file);
-            }
-            else {
+            } else {
                 filesList.add(file);
             }
         }
