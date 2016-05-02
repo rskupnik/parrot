@@ -20,11 +20,43 @@ public class ParrotTest {
         String param = "test";
 
         // when
-        Parrot.init();
+        Parrot parrot = new Parrot();
 
         // then
-        assertTrue(Parrot.get(param).isPresent());
-        assertEquals(properOutcome, Parrot.get(param).get());
+        assertTrue(parrot.get(param).isPresent());
+        assertEquals(properOutcome, parrot.get(param).get());
+    }
+
+    @Test
+    public void shouldLoadTestFromClasspathOnlyAllowedFiles() throws IOException {
+        // given
+        String properOutcome = "passed";
+        String param = "test";
+        String invalidParam = "test2";
+
+        // when
+        Parrot parrot = new Parrot("test");
+
+        // then
+        assertTrue(parrot.get(param).isPresent());
+        assertEquals(properOutcome, parrot.get(param).get());
+        assertFalse(parrot.get(invalidParam).isPresent());
+    }
+
+    @Test
+    public void shouldLoadTestFromClasspathOnlyAllowedFilesWithFileEnding() throws IOException {
+        // given
+        String properOutcome = "passed";
+        String param = "test";
+        String invalidParam = "test2";
+
+        // when
+        Parrot parrot = new Parrot("test.properties");
+
+        // then
+        assertTrue(parrot.get(param).isPresent());
+        assertEquals(properOutcome, parrot.get(param).get());
+        assertFalse(parrot.get(invalidParam).isPresent());
     }
 
     @Test
@@ -34,11 +66,43 @@ public class ParrotTest {
         String param = "testUserDir";
 
         // when
-        Parrot.init();
+        Parrot parrot = new Parrot();
 
         // then
-        assertTrue(Parrot.get(param).isPresent());
-        assertEquals(properOutcome, Parrot.get(param).get());
+        assertTrue(parrot.get(param).isPresent());
+        assertEquals(properOutcome, parrot.get(param).get());
+    }
+
+    @Test
+    public void shouldLoadFromUserDirOnlyAllowedFiles() throws IOException {
+        // given
+        String properOutcome = "passed";
+        String param = "testUserDir";
+        String invalidParam = "testUserDir2";
+
+        // when
+        Parrot parrot = new Parrot("testUserDir", "test");
+
+        // then
+        assertTrue(parrot.get(param).isPresent());
+        assertEquals(properOutcome, parrot.get(param).get());
+        assertFalse(parrot.get(invalidParam).isPresent());
+    }
+
+    @Test
+    public void shouldLoadFromUserDirOnlyAllowedFilesWithFileEnding() throws IOException {
+        // given
+        String properOutcome = "passed";
+        String param = "testUserDir";
+        String invalidParam = "testUserDir2";
+
+        // when
+        Parrot parrot = new Parrot("testUserDir.properties", "test");
+
+        // then
+        assertTrue(parrot.get(param).isPresent());
+        assertEquals(properOutcome, parrot.get(param).get());
+        assertFalse(parrot.get(invalidParam).isPresent());
     }
 
     @Test
@@ -47,9 +111,9 @@ public class ParrotTest {
         String param = "invalidParam";
 
         // when
-        Parrot.init();
+        Parrot parrot = new Parrot();
 
         // then
-        assertFalse(Parrot.get(param).isPresent());
+        assertFalse(parrot.get(param).isPresent());
     }
 }

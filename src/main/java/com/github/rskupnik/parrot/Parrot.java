@@ -10,25 +10,32 @@ import java.util.*;
 
 public class Parrot {
 
-    private static Map<String, String> properties = new HashMap<String, String>();
+    private Map<String, String> properties = new HashMap<String, String>();
 
-    private Parrot() {}
+    public Parrot() {
+        load();
+    }
 
-    public static void init() throws IOException {
+    public Parrot(String... allowedFiles) {
+        load(allowedFiles);
+    }
+
+    private void load(String... allowedFiles) {
         getFiles(System.getProperty("java.class.path"))
                 .forEach(file -> {
-                    if (file.getPath().endsWith(".properties")) {
-                        ingest(file);
-                    }
-                }
-        );
+                            if (file.getPath().endsWith(".properties")) {
+                                if (isAllowed(file, allowedFiles))
+                                    ingest(file);
+                            }
+                        }
+                );
 
         try {
             Files.list(Paths.get(System.getProperty("user.dir")))
                     .forEach(path -> {
                         String fileName = path.getFileName().toString();
 
-                        if (fileName.endsWith(".properties")) {
+                        if (fileName.endsWith(".properties") && isAllowed(path.toFile(), allowedFiles)) {
                             ingest(path.toFile());
                         }
                     });
@@ -37,16 +44,29 @@ public class Parrot {
         }
     }
 
-    public static Optional<String> get(String property) {
+    private boolean isAllowed(File file, String[] allowedFiles) {
+        if (allowedFiles == null || allowedFiles.length == 0)
+            return true;
+
+        for (String allowedFile : allowedFiles) {
+            String filename = allowedFile.contains(".properties") ? allowedFile.replace(".properties", "") : allowedFile;
+            if (file.getName().replace(".properties", "").equals(filename))
+                return true;
+        }
+
+        return false;
+    }
+
+    public Optional<String> get(String property) {
         String value = properties.get(property);
         return value != null ? Optional.of(value) : Optional.empty();
     }
 
-    public static Map<String, String> all() {
+    public Map<String, String> all() {
         return new HashMap<>(properties);
     }
 
-    private static void ingest(File file) {
+    private void ingest(File file) {
         try {
             Properties prop = new Properties();
             prop.load(new FileInputStream(file));
@@ -58,7 +78,7 @@ public class Parrot {
         }
     }
 
-    private static List<File> getFiles(String paths) {
+    private List<File> getFiles(String paths) {
         List<File> filesList = new ArrayList<File>();
         for (final String path : paths.split(File.pathSeparator)) {
             final File file = new File(path);
@@ -72,7 +92,7 @@ public class Parrot {
         return filesList;
     }
 
-    private static void recurse(List<File> filesList, File f) {
+    private void recurse(List<File> filesList, File f) {
         File list[] = f.listFiles();
         for (File file : list) {
             if (file.isDirectory()) {
