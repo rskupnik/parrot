@@ -10,14 +10,19 @@ import java.util.*;
 public class Parrot {
 
     private static Parrot INSTANCE;
+    private static Parrot MOCK;
 
     /**
-     * Receives the newest instance of Parrot that was created by calling
-     * <b>newInstance()</b>.
+     * Receives either the newest instance of Parrot that was created by calling
+     * <b>newInstance()</b> or the mock instance, if <b>mock()</b> was used.
      *
-     * @return the newest instance of Parrot
+     * @return the mock instance if mock() was used or the newest regular instance
+     * created with newInstance()
      */
     public static Parrot getInstance() {
+        if (MOCK != null)
+            return MOCK;
+
         if (INSTANCE == null)
             newInstance();
 
@@ -25,19 +30,24 @@ public class Parrot {
     }
 
     /**
-     * Sets the current instance of Parrot
+     * Sets a mock instance of Parrot.
+     * <br/>
+     * If set, this instance will be always returned by <b>getInstance()</b>
+     * <br/>
+     * You can use it to mock Parrot when using it in a single static context
      *
-     * @param parrot the instance to set the current instance to
+     * @param parrot an instance of Parrot to set the mock to
      */
-    public static void setInstance(Parrot parrot) {
-        INSTANCE = parrot;
+    public static void mock(Parrot parrot) {
+        MOCK = parrot;
     }
 
     /**
      * Creates a new instance of Parrot and saves it as the current instance.
      * <br/>
      * <br/>
-     * The current instance can be withdrawn using <b>getInstance()</b>.
+     * The current instance can be withdrawn using <b>getInstance()</b>
+     * (unless <b>mock()</b> was used - the mocked instance will be returned instead).
      * <br/>
      * <br/>
      * This allows creating multiple different instances of Parrot or using
