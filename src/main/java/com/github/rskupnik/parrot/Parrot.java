@@ -25,6 +25,15 @@ public class Parrot {
     }
 
     /**
+     * Sets the current instance of Parrot
+     *
+     * @param parrot the instance to set the current instance to
+     */
+    public static void setInstance(Parrot parrot) {
+        INSTANCE = parrot;
+    }
+
+    /**
      * Creates a new instance of Parrot and saves it as the current instance.
      * <br/>
      * <br/>
