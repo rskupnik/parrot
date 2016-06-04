@@ -8,7 +8,8 @@ So now instead of worrying about loading each properties file and extracting the
 
 ```
 // At this point Parrot will find and load all .properties files in classpath and root directory
-Parrot.init();
+// If you want to specify exact files you can do that too, see next code snipept
+Parrot parrot = new Parrot();
 
 // Parrot will look for the "optionalParameter" in the map of properties it loaded from the files and return an optional
 Optional<String> optionalParameter = Parrot.get("optionalParameter");
@@ -18,6 +19,56 @@ Map<String, String> allParameters = Parrot.all();
 ```
 
 ... and you're done. Just put your .properties files either in resources or at the root directory and use the parameters freely.
+
+Parrot only deals with Strings for now so it's up to you to cast your values to proper types. This will change in later versions.
+
+You can also specify the exact .properties file names you want Parrot to load, in case you don't want it to load everything in the classpath and root directory:
+
+```
+// Note how you don't need to include the .properties, but it's valid to do so
+Parrot parrot = new Parrot("somePropertiesFile1", "somePropertiesFile2.properties");
+```
+
+# Can I mock it?
+
+Yes, it's pretty straightforward.
+
+```
+when(parrotMock.get("some-param")).thenReturn(Optional.of("mocked-value"));
+```
+
+You can inject the mocked Parrot instance using dependency injection or, in case of simple projects, a known strategy as follows:
+```
+public class YourClass {
+    private Parrot parrot;
+    
+    /* Your code here that uses parrot via getParrot()... */
+    
+    public Parrot getParrot() {
+        if (parrot == null)
+            parrot = new Parrot();
+        
+        return parrot;
+    }
+}
+
+@RunWith(MockitoJUnitRunner.class)
+public class YourClassTest {
+
+    @Spy
+    private YourClass yourClass = new YourClass();
+    
+    @Mock
+    private Parrot parrotMock;
+    
+    @Before
+    public void before() {
+       when(yourClass.getParrot()).thenReturn(parrotMock);
+       when(parrotMock.get("some-param")).thenReturn(Optional.of("mocked-value"));
+       // ...
+    }
+}
+```
 
 # How to get it?
 
