@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=640">
+
+    <link rel="stylesheet" href="stylesheets/core.css" media="screen">
+    <link rel="stylesheet" href="stylesheets/mobile.css" media="handheld, only screen and (max-device-width:640px)">
+    <link rel="stylesheet" href="stylesheets/github-light.css">
+
+    <script type="text/javascript" src="javascripts/modernizr.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="javascripts/headsmart.min.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function () {
+        $('#main_content').headsmart()
+      })
+    </script>
+    <title>Parrot by rskupnik</title>
+  </head>
+
+  <body>
+    <a id="forkme_banner" href="https://github.com/rskupnik/parrot">View on GitHub</a>
+    <div class="shell">
+
+      <header>
+        <span class="ribbon-outer">
+          <span class="ribbon-inner">
+            <h1>Parrot</h1>
+            <h2>Parrot is a property-files abstraction layer that aims to simplify the usage of multiple property files</h2>
+          </span>
+          <span class="left-tail"></span>
+          <span class="right-tail"></span>
+        </span>
+      </header>
+
+      <section id="downloads">
+        <span class="inner">
+          <a href="https://github.com/rskupnik/parrot/zipball/master" class="zip"><em>download</em> .ZIP</a><a href="https://github.com/rskupnik/parrot/tarball/master" class="tgz"><em>download</em> .TGZ</a>
+        </span>
+      </section>
+
+
+      <span class="banner-fix"></span>
+
+
+      <section id="main_content">
+        <h1>
+<a id="parrot" class="anchor" href="#parrot" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Parrot</h1>
+
+<p>Parrot is a property-files abstraction layer that aims to simplify the usage of multiple property files.</p>
+
+<p>It's very simple - Parrot loads every .properties file from the classpath and from the working directory and makes them available through one simple method.</p>
+
+<p>So now instead of worrying about loading each properties file and extracting the appropriate properties, you just do...</p>
+
+<pre><code>// At this point Parrot will find and load all .properties files in classpath and root directory
+// If you want to specify exact files you can do that too, see next code snipept
+Parrot parrot = new Parrot();
+
+// Parrot will look for the "optionalParameter" in the map of properties it loaded from the files and return an optional
+Optional&lt;String&gt; optionalParameter = Parrot.get("optionalParameter");
+
+// Parrot will return a copy of all the parameters it found in the properties files
+Map&lt;String, String&gt; allParameters = Parrot.all(); 
+</code></pre>
+
+<p>... and you're done. Just put your .properties files either in resources or at the root directory and use the parameters freely.</p>
+
+<p>Parrot only deals with Strings for now so it's up to you to cast your values to proper types. This will change in later versions.</p>
+
+<p>You can also specify the exact .properties file names you want Parrot to load, in case you don't want it to load everything in the classpath and root directory:</p>
+
+<pre><code>// Note how you don't need to include the .properties, but it's valid to do so
+Parrot parrot = new Parrot("somePropertiesFile1", "somePropertiesFile2.properties");
+</code></pre>
+
+<h1>
+<a id="can-i-mock-it" class="anchor" href="#can-i-mock-it" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Can I mock it?</h1>
+
+<p>Yes, it's pretty straightforward.</p>
+
+<pre><code>when(parrotMock.get("some-param")).thenReturn(Optional.of("mocked-value"));
+</code></pre>
+
+<p>You can inject the mocked Parrot instance using dependency injection or, in case of simple projects, a known strategy as follows:</p>
+
+<pre><code>public class YourClass {
+    private Parrot parrot;
+
+    /* Your code here that uses parrot via getParrot()... */
+
+    public Parrot getParrot() {
+        if (parrot == null)
+            parrot = new Parrot();
+
+        return parrot;
+    }
+}
+
+@RunWith(MockitoJUnitRunner.class)
+public class YourClassTest {
+
+    @Spy
+    private YourClass yourClass = new YourClass();
+
+    @Mock
+    private Parrot parrotMock;
+
+    @Before
+    public void before() {
+       when(yourClass.getParrot()).thenReturn(parrotMock);
+       when(parrotMock.get("some-param")).thenReturn(Optional.of("mocked-value"));
+       // ...
+    }
+}
+</code></pre>
+
+<h1>
+<a id="how-to-get-it" class="anchor" href="#how-to-get-it" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>How to get it?</h1>
+
+<h3>
+<a id="option-1" class="anchor" href="#option-1" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Option 1</h3>
+
+<p>Add my bintray repository to your pom:</p>
+
+<pre><code>&lt;repositories&gt;
+  (...)
+  &lt;repository&gt;
+      &lt;snapshots&gt;
+          &lt;enabled&gt;false&lt;/enabled&gt;
+      &lt;/snapshots&gt;
+      &lt;id&gt;bintray-rskupnik-maven&lt;/id&gt;
+      &lt;name&gt;bintray&lt;/name&gt;
+      &lt;url&gt;http://dl.bintray.com/rskupnik/maven&lt;/url&gt;
+  &lt;/repository&gt;
+  (...)
+&lt;/repositories&gt;
+</code></pre>
+
+<p>And then you can just add a dependency as any other:</p>
+
+<pre><code>&lt;dependencies&gt;
+  (...)
+  &lt;dependency&gt;
+    &lt;groupId&gt;com.github.rskupnik&lt;/groupId&gt;
+    &lt;artifactId&gt;parrot&lt;/artifactId&gt;
+    &lt;version&gt;2.0&lt;/version&gt;
+  &lt;/dependency&gt;
+  (...)
+&lt;/dependencies&gt;
+</code></pre>
+
+<h3>
+<a id="option-2" class="anchor" href="#option-2" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Option 2</h3>
+
+<p><code>git clone</code> -&gt; <code>mvn install</code></p>
+
+<h3>
+<a id="option-3" class="anchor" href="#option-3" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Option 3</h3>
+
+<p>Simply copy the contents of the <a href="https://github.com/rskupnik/parrot/blob/master/src/main/java/com/github/rskupnik/parrot/Parrot.java">Parrot.java</a> somewhere into your project and use it!</p>
+
+<h1>
+<a id="examples" class="anchor" href="#examples" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Examples?</h1>
+
+<p>Parrot is very simple, so there are no examples. However, if you really need some, look at these files in the project:</p>
+
+<p><a href="https://github.com/rskupnik/parrot/blob/master/src/test/java/com/github/rskupnik/parrot/ParrotTest.java">/src/test/java/com/github/rskupnik/parrot/ParrotTest.java</a></p>
+
+<p><a href="https://github.com/rskupnik/parrot/blob/master/src/test/resources/test.properties">/src/test/resources/test.properties</a></p>
+
+<p><a href="https://github.com/rskupnik/parrot/blob/master/testUserDir.properties">/testUserDir.properties</a></p>
+
+<h1>
+<a id="rationale" class="anchor" href="#rationale" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Rationale</h1>
+
+<p>When starting any new small hobby project I always use properties files. But these files require me to write some boilerplate code that will read them from the classpath/directory and expose the properties I'm interested in.</p>
+
+<p>I've grown tired of writing this code over and over again so I created Parrot to take care of that for me so I can just use the properties I want from the get-go.</p>
+
+<h1>
+<a id="future" class="anchor" href="#future" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Future</h1>
+
+<ul>
+<li>Support for other propery file formats, such as YAML or XML</li>
+<li>Support for other variable types than String, so the users don't have to perform casts themselves</li>
+<li>Support for overlapping properties (i.e. the same property names defined in different files), probably through namespaces</li>
+</ul>
+
+<h1>
+<a id="credits" class="anchor" href="#credits" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Credits</h1>
+
+<p>Icon made by Freepik from <a href="http://www.flaticon.com">www.flaticon.com</a> </p>
+      </section>
+
+      <footer>
+        <span class="ribbon-outer">
+          <span class="ribbon-inner">
+            <p>this project by <a href="https://github.com/rskupnik">rskupnik</a> can be found on <a href="https://github.com/rskupnik/parrot">GitHub</a></p>
+          </span>
+          <span class="left-tail"></span>
+          <span class="right-tail"></span>
+        </span>
+        <p>Generated with <a href="https://pages.github.com">GitHub Pages</a> using Merlot</p>
+        <span class="octocat"></span>
+      </footer>
+
+    </div>
+
+    
+  </body>
+</html>
