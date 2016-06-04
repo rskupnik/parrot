@@ -74,19 +74,18 @@ public class YourClassTest {
 
 ### Option 1
 
-`git clone` -> `mvn install`
- 
-### Option 2
-
-Since it is not yet available on Maven central, you'll need to add my private github-based repository to your repositories.
+Add my bintray repository to your pom:
 
 ```
 <repositories>
   (...)
   <repository>
-    <id>git-rskupnik</id>
-    <name>rskupnik's Git based repo</name>
-    <url>https://github.com/rskupnik/maven-repo/raw/master/</url>
+      <snapshots>
+          <enabled>false</enabled>
+      </snapshots>
+      <id>bintray-rskupnik-maven</id>
+      <name>bintray</name>
+      <url>http://dl.bintray.com/rskupnik/maven</url>
   </repository>
   (...)
 </repositories>
@@ -100,11 +99,15 @@ And then you can just add a dependency as any other:
   <dependency>
     <groupId>com.github.rskupnik</groupId>
     <artifactId>parrot</artifactId>
-    <version>1.1</version>
+    <version>2.0</version>
   </dependency>
   (...)
 </dependencies>
 ```
+ 
+### Option 2
+
+`git clone` -> `mvn install`
 
 ### Option 3
 
