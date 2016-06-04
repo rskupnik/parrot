@@ -4,7 +4,7 @@
 
     <groupId>com.github.rskupnik</groupId>
     <artifactId>parrot</artifactId>
-    <version>1.2</version>
+    <version>2.0</version>
     <packaging>jar</packaging>
 
     <name>parrot</name>
@@ -39,18 +39,12 @@
             </plugin>
         </plugins>
     </build>
-	
-	<profiles>
-		<profile>
-			<id>local-repo</id>
-			<distributionManagement>
-				<repository>
-					<id>internal.repo</id>
-					<name>Temporary Staging Repository</name>
-					<url>file://${project.build.directory}\..\..\..\maven-repo</url>
-				</repository>
-			</distributionManagement>
-		</profile>
-	</profiles>
 
+    <distributionManagement>
+        <repository>
+            <id>bintray-rskupnik-maven</id>
+            <name>rskupnik-maven</name>
+            <url>https://api.bintray.com/maven/rskupnik/maven/Parrot/;publish=1</url>
+        </repository>
+    </distributionManagement>
 </project>

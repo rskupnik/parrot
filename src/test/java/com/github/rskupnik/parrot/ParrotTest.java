@@ -22,16 +22,22 @@ package com.github.rskupnik.parrot;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ParrotTest {
+
+    @Mock
+    private Parrot mockedParrot;
 
     @Test
     public void shouldLoadTestFromClasspath() throws IOException {
@@ -40,7 +46,7 @@ public class ParrotTest {
         String param = "test";
 
         // when
-        Parrot parrot = Parrot.newInstance();
+        Parrot parrot = new Parrot();
 
         // then
         assertTrue(parrot.get(param).isPresent());
@@ -55,7 +61,7 @@ public class ParrotTest {
         String invalidParam = "test2";
 
         // when
-        Parrot parrot = Parrot.newInstance("test");
+        Parrot parrot = new Parrot("test");
 
         // then
         assertTrue(parrot.get(param).isPresent());
@@ -71,7 +77,7 @@ public class ParrotTest {
         String invalidParam = "test2";
 
         // when
-        Parrot parrot = Parrot.newInstance("test.properties");
+        Parrot parrot = new Parrot("test.properties");
 
         // then
         assertTrue(parrot.get(param).isPresent());
@@ -86,7 +92,7 @@ public class ParrotTest {
         String param = "testUserDir";
 
         // when
-        Parrot parrot = Parrot.newInstance();
+        Parrot parrot = new Parrot();
 
         // then
         assertTrue(parrot.get(param).isPresent());
@@ -101,7 +107,7 @@ public class ParrotTest {
         String invalidParam = "testUserDir2";
 
         // when
-        Parrot parrot = Parrot.newInstance("testUserDir", "test");
+        Parrot parrot = new Parrot("testUserDir", "test");
 
         // then
         assertTrue(parrot.get(param).isPresent());
@@ -117,7 +123,7 @@ public class ParrotTest {
         String invalidParam = "testUserDir2";
 
         // when
-        Parrot parrot = Parrot.newInstance("testUserDir.properties", "test");
+        Parrot parrot = new Parrot("testUserDir.properties", "test");
 
         // then
         assertTrue(parrot.get(param).isPresent());
@@ -131,7 +137,7 @@ public class ParrotTest {
         String param = "invalidParam";
 
         // when
-        Parrot parrot = Parrot.newInstance();
+        Parrot parrot = new Parrot();
 
         // then
         assertFalse(parrot.get(param).isPresent());
@@ -145,8 +151,8 @@ public class ParrotTest {
         String properOutcome = "passed";
 
         // when
-        Parrot parrot1 = Parrot.newInstance("test");
-        Parrot parrot2 = Parrot.newInstance("test2");
+        Parrot parrot1 = new Parrot("test");
+        Parrot parrot2 = new Parrot("test2");
 
         // then
         assertTrue(parrot1.get(param1).isPresent());
@@ -158,22 +164,17 @@ public class ParrotTest {
     }
 
     @Test
-    public void shouldInitiateStaticParrot() {
+    public void shouldMockParrot() {
         // given
-        String param1 = "test";
-        String param2 = "test2";
-        String properOutcome = "passed";
+        String param = "test";
+        String anticipatedOutcome = "substituted";
+        when(mockedParrot.get(param)).thenReturn(Optional.of(anticipatedOutcome));
 
         // when
-        Parrot parrot1 = Parrot.newInstance("test");
-        Parrot.newInstance("test2");
+        Optional<String> output = mockedParrot.get(param);
 
         // then
-        assertTrue(parrot1.get(param1).isPresent());
-        assertEquals(properOutcome, parrot1.get(param1).get());
-        assertFalse(parrot1.get(param2).isPresent());
-        assertTrue(Parrot.getInstance().get(param2).isPresent());
-        assertEquals(properOutcome, Parrot.getInstance().get(param2).get());
-        assertFalse(Parrot.getInstance().get(param1).isPresent());
+        assertTrue(output.isPresent());
+        assertEquals(anticipatedOutcome, output.get());
     }
 }
