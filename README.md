@@ -134,3 +134,7 @@ I've grown tired of writing this code over and over again so I created Parrot to
 * Support for other propery file formats, such as YAML or XML
 * Support for other variable types than String, so the users don't have to perform casts themselves
 * Support for overlapping properties (i.e. the same property names defined in different files), probably through namespaces
+
+# Credits
+
+Icon made by Freepik from www.flaticon.com 
