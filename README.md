@@ -1,4 +1,4 @@
-# Parrot
+# What is it?
 
 Parrot is a property-files abstraction layer that aims to simplify the usage of multiple property files.
 
@@ -28,6 +28,41 @@ You can also specify the exact .properties file names you want Parrot to load, i
 // Note how you don't need to include the .properties, but it's valid to do so
 Parrot parrot = new Parrot("somePropertiesFile1", "somePropertiesFile2.properties");
 ```
+
+# How to get it?
+
+### Option 1
+
+Add the jcenter repository:
+
+```
+<repository>
+  <snapshots>
+      <enabled>false</enabled>
+  </snapshots>
+  <id>central</id>
+  <name>bintray</name>
+  <url>http://jcenter.bintray.com</url>
+</repository>
+```
+
+And then you can just add a dependency as any other:
+
+```
+<dependency>
+    <groupId>com.github.rskupnik</groupId>
+    <artifactId>parrot</artifactId>
+    <version>2.0</version>
+</dependency>
+```
+ 
+### Option 2
+
+`git clone` -> `mvn install`
+
+### Option 3
+
+Simply copy the contents of the [Parrot.java](https://github.com/rskupnik/parrot/blob/master/src/main/java/com/github/rskupnik/parrot/Parrot.java) somewhere into your project and use it!
 
 # Can I mock it?
 
@@ -69,49 +104,6 @@ public class YourClassTest {
     }
 }
 ```
-
-# How to get it?
-
-### Option 1
-
-Add my bintray repository to your pom:
-
-```
-<repositories>
-  (...)
-  <repository>
-      <snapshots>
-          <enabled>false</enabled>
-      </snapshots>
-      <id>bintray-rskupnik-maven</id>
-      <name>bintray</name>
-      <url>http://dl.bintray.com/rskupnik/maven</url>
-  </repository>
-  (...)
-</repositories>
-```
-
-And then you can just add a dependency as any other:
-
-```
-<dependencies>
-  (...)
-  <dependency>
-    <groupId>com.github.rskupnik</groupId>
-    <artifactId>parrot</artifactId>
-    <version>2.0</version>
-  </dependency>
-  (...)
-</dependencies>
-```
- 
-### Option 2
-
-`git clone` -> `mvn install`
-
-### Option 3
-
-Simply copy the contents of the [Parrot.java](https://github.com/rskupnik/parrot/blob/master/src/main/java/com/github/rskupnik/parrot/Parrot.java) somewhere into your project and use it!
 
 # Examples?
 
