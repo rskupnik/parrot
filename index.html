@@ -1,53 +1,48 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
-    <meta charset='utf-8'>
+    <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <meta name="viewport" content="width=640">
-
-    <link rel="stylesheet" href="stylesheets/core.css" media="screen">
-    <link rel="stylesheet" href="stylesheets/mobile.css" media="handheld, only screen and (max-device-width:640px)">
-    <link rel="stylesheet" href="stylesheets/github-light.css">
-
-    <script type="text/javascript" src="javascripts/modernizr.js"></script>
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-    <script type="text/javascript" src="javascripts/headsmart.min.js"></script>
-    <script type="text/javascript">
-      $(document).ready(function () {
-        $('#main_content').headsmart()
-      })
-    </script>
     <title>Parrot by rskupnik</title>
-  </head>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-dark.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/main.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 
+  </head>
   <body>
-    <a id="forkme_banner" href="https://github.com/rskupnik/parrot">View on GitHub</a>
-    <div class="shell">
 
       <header>
-        <span class="ribbon-outer">
-          <span class="ribbon-inner">
-            <h1>Parrot</h1>
-            <h2>Parrot is a property-files abstraction layer that aims to simplify the usage of multiple property files</h2>
-          </span>
-          <span class="left-tail"></span>
-          <span class="right-tail"></span>
-        </span>
+        <h1>Parrot</h1>
+        <p>Parrot is a property-files abstraction layer that aims to simplify the usage of multiple property files</p>
       </header>
 
-      <section id="downloads">
-        <span class="inner">
-          <a href="https://github.com/rskupnik/parrot/zipball/master" class="zip"><em>download</em> .ZIP</a><a href="https://github.com/rskupnik/parrot/tarball/master" class="tgz"><em>download</em> .TGZ</a>
-        </span>
-      </section>
+      <div id="banner">
+        <span id="logo"></span>
 
+        <a href="https://github.com/rskupnik/parrot" class="button fork"><strong>View On GitHub</strong></a>
+        <div class="downloads">
+          <span>Downloads:</span>
+          <ul>
+            <li><a href="https://github.com/rskupnik/parrot/zipball/master" class="button">ZIP</a></li>
+            <li><a href="https://github.com/rskupnik/parrot/tarball/master" class="button">TAR</a></li>
+          </ul>
+        </div>
+      </div><!-- end banner -->
 
-      <span class="banner-fix"></span>
+    <div class="wrapper">
+      <nav>
+        <ul></ul>
+      </nav>
+      <section>
+        <p><img src="http://i.imgur.com/tdSq4ML.png" alt="Parrot Logo"></p>
 
-
-      <section id="main_content">
-        <h1>
-<a id="parrot" class="anchor" href="#parrot" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Parrot</h1>
+<h1>
+<a id="what-is-it" class="anchor" href="#what-is-it" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>What is it?</h1>
 
 <p>Parrot is a property-files abstraction layer that aims to simplify the usage of multiple property files.</p>
 
@@ -75,6 +70,43 @@ Map&lt;String, String&gt; allParameters = Parrot.all();
 <pre><code>// Note how you don't need to include the .properties, but it's valid to do so
 Parrot parrot = new Parrot("somePropertiesFile1", "somePropertiesFile2.properties");
 </code></pre>
+
+<h1>
+<a id="how-to-get-it" class="anchor" href="#how-to-get-it" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>How to get it?</h1>
+
+<h3>
+<a id="option-1" class="anchor" href="#option-1" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Option 1</h3>
+
+<p>Add the jcenter repository:</p>
+
+<pre><code>&lt;repository&gt;
+  &lt;snapshots&gt;
+      &lt;enabled&gt;false&lt;/enabled&gt;
+  &lt;/snapshots&gt;
+  &lt;id&gt;central&lt;/id&gt;
+  &lt;name&gt;bintray&lt;/name&gt;
+  &lt;url&gt;http://jcenter.bintray.com&lt;/url&gt;
+&lt;/repository&gt;
+</code></pre>
+
+<p>And then you can just add a dependency as any other:</p>
+
+<pre><code>&lt;dependency&gt;
+    &lt;groupId&gt;com.github.rskupnik&lt;/groupId&gt;
+    &lt;artifactId&gt;parrot&lt;/artifactId&gt;
+    &lt;version&gt;2.0&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+
+<h3>
+<a id="option-2" class="anchor" href="#option-2" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Option 2</h3>
+
+<p><code>git clone</code> -&gt; <code>mvn install</code></p>
+
+<h3>
+<a id="option-3" class="anchor" href="#option-3" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Option 3</h3>
+
+<p>Simply copy the contents of the <a href="https://github.com/rskupnik/parrot/blob/master/src/main/java/com/github/rskupnik/parrot/Parrot.java">Parrot.java</a> somewhere into your project and use it!</p>
 
 <h1>
 <a id="can-i-mock-it" class="anchor" href="#can-i-mock-it" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Can I mock it?</h1>
@@ -118,51 +150,6 @@ public class YourClassTest {
 </code></pre>
 
 <h1>
-<a id="how-to-get-it" class="anchor" href="#how-to-get-it" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>How to get it?</h1>
-
-<h3>
-<a id="option-1" class="anchor" href="#option-1" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Option 1</h3>
-
-<p>Add my bintray repository to your pom:</p>
-
-<pre><code>&lt;repositories&gt;
-  (...)
-  &lt;repository&gt;
-      &lt;snapshots&gt;
-          &lt;enabled&gt;false&lt;/enabled&gt;
-      &lt;/snapshots&gt;
-      &lt;id&gt;bintray-rskupnik-maven&lt;/id&gt;
-      &lt;name&gt;bintray&lt;/name&gt;
-      &lt;url&gt;http://dl.bintray.com/rskupnik/maven&lt;/url&gt;
-  &lt;/repository&gt;
-  (...)
-&lt;/repositories&gt;
-</code></pre>
-
-<p>And then you can just add a dependency as any other:</p>
-
-<pre><code>&lt;dependencies&gt;
-  (...)
-  &lt;dependency&gt;
-    &lt;groupId&gt;com.github.rskupnik&lt;/groupId&gt;
-    &lt;artifactId&gt;parrot&lt;/artifactId&gt;
-    &lt;version&gt;2.0&lt;/version&gt;
-  &lt;/dependency&gt;
-  (...)
-&lt;/dependencies&gt;
-</code></pre>
-
-<h3>
-<a id="option-2" class="anchor" href="#option-2" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Option 2</h3>
-
-<p><code>git clone</code> -&gt; <code>mvn install</code></p>
-
-<h3>
-<a id="option-3" class="anchor" href="#option-3" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Option 3</h3>
-
-<p>Simply copy the contents of the <a href="https://github.com/rskupnik/parrot/blob/master/src/main/java/com/github/rskupnik/parrot/Parrot.java">Parrot.java</a> somewhere into your project and use it!</p>
-
-<h1>
 <a id="examples" class="anchor" href="#examples" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Examples?</h1>
 
 <p>Parrot is very simple, so there are no examples. However, if you really need some, look at these files in the project:</p>
@@ -194,21 +181,12 @@ public class YourClassTest {
 
 <p>Icon made by Freepik from <a href="http://www.flaticon.com">www.flaticon.com</a> </p>
       </section>
-
       <footer>
-        <span class="ribbon-outer">
-          <span class="ribbon-inner">
-            <p>this project by <a href="https://github.com/rskupnik">rskupnik</a> can be found on <a href="https://github.com/rskupnik/parrot">GitHub</a></p>
-          </span>
-          <span class="left-tail"></span>
-          <span class="right-tail"></span>
-        </span>
-        <p>Generated with <a href="https://pages.github.com">GitHub Pages</a> using Merlot</p>
-        <span class="octocat"></span>
+        <p>Project maintained by <a href="https://github.com/rskupnik">rskupnik</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></small></p>
       </footer>
-
     </div>
-
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
     
   </body>
 </html>
