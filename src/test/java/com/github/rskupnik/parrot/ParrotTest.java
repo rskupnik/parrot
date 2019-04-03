@@ -31,22 +31,20 @@ import java.util.Optional;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ParrotTest {
 
-    @Mock
-    private Parrot mockedParrot;
-
     @Test
-    public void shouldLoadTestFromClasspath() throws IOException {
+    public void shouldLoadTestFromClasspath() {
         // given
         String properOutcome = "passed";
         String param = "test";
 
         // when
-        Parrot parrot = new Parrot();
+        Parrot parrot = Parrot.load();
 
         // then
         assertTrue(parrot.get(param).isPresent());
@@ -54,14 +52,14 @@ public class ParrotTest {
     }
 
     @Test
-    public void shouldLoadTestFromClasspathOnlyAllowedFiles() throws IOException {
+    public void shouldLoadTestFromClasspathOnlyAllowedFiles() {
         // given
         String properOutcome = "passed";
         String param = "test";
         String invalidParam = "test2";
 
         // when
-        Parrot parrot = new Parrot("test");
+        Parrot parrot = Parrot.load("test");
 
         // then
         assertTrue(parrot.get(param).isPresent());
@@ -70,14 +68,14 @@ public class ParrotTest {
     }
 
     @Test
-    public void shouldLoadTestFromClasspathOnlyAllowedFilesWithFileEnding() throws IOException {
+    public void shouldLoadTestFromClasspathOnlyAllowedFilesWithFileEnding() {
         // given
         String properOutcome = "passed";
         String param = "test";
         String invalidParam = "test2";
 
         // when
-        Parrot parrot = new Parrot("test.properties");
+        Parrot parrot = Parrot.load("test.properties");
 
         // then
         assertTrue(parrot.get(param).isPresent());
@@ -86,13 +84,13 @@ public class ParrotTest {
     }
 
     @Test
-    public void shouldLoadFromUserDir() throws IOException {
+    public void shouldLoadFromUserDir() {
         // given
         String properOutcome = "passed";
         String param = "testUserDir";
 
         // when
-        Parrot parrot = new Parrot();
+        Parrot parrot = Parrot.load();
 
         // then
         assertTrue(parrot.get(param).isPresent());
@@ -100,30 +98,14 @@ public class ParrotTest {
     }
 
     @Test
-    public void shouldLoadFromUserDirOnlyAllowedFiles() throws IOException {
-        // given
-        String properOutcome = "passed";
-        String param = "testUserDir";
-        String invalidParam = "testUserDir2";
-
-        // when
-        Parrot parrot = new Parrot("testUserDir", "test");
-
-        // then
-        assertTrue(parrot.get(param).isPresent());
-        assertEquals(properOutcome, parrot.get(param).get());
-        assertFalse(parrot.get(invalidParam).isPresent());
-    }
-
-    @Test
-    public void shouldLoadFromUserDirOnlyAllowedFilesWithFileEnding() throws IOException {
+    public void shouldLoadFromUserDirOnlyAllowedFiles() {
         // given
         String properOutcome = "passed";
         String param = "testUserDir";
         String invalidParam = "testUserDir2";
 
         // when
-        Parrot parrot = new Parrot("testUserDir.properties", "test");
+        Parrot parrot = Parrot.load("testUserDir", "test");
 
         // then
         assertTrue(parrot.get(param).isPresent());
@@ -132,12 +114,28 @@ public class ParrotTest {
     }
 
     @Test
-    public void shouldNotFindParamThatIsNotInFile() throws IOException {
+    public void shouldLoadFromUserDirOnlyAllowedFilesWithFileEnding() {
+        // given
+        String properOutcome = "passed";
+        String param = "testUserDir";
+        String invalidParam = "testUserDir2";
+
+        // when
+        Parrot parrot = Parrot.load("testUserDir.properties", "test");
+
+        // then
+        assertTrue(parrot.get(param).isPresent());
+        assertEquals(properOutcome, parrot.get(param).get());
+        assertFalse(parrot.get(invalidParam).isPresent());
+    }
+
+    @Test
+    public void shouldNotFindParamThatIsNotInFile() {
         // given
         String param = "invalidParam";
 
         // when
-        Parrot parrot = new Parrot();
+        Parrot parrot = Parrot.load();
 
         // then
         assertFalse(parrot.get(param).isPresent());
@@ -151,8 +149,8 @@ public class ParrotTest {
         String properOutcome = "passed";
 
         // when
-        Parrot parrot1 = new Parrot("test");
-        Parrot parrot2 = new Parrot("test2");
+        Parrot parrot1 = Parrot.load("test");
+        Parrot parrot2 = Parrot.load("test2");
 
         // then
         assertTrue(parrot1.get(param1).isPresent());
@@ -168,6 +166,7 @@ public class ParrotTest {
         // given
         String param = "test";
         String anticipatedOutcome = "substituted";
+        final Parrot mockedParrot = mock(Parrot.class);
         when(mockedParrot.get(param)).thenReturn(Optional.of(anticipatedOutcome));
 
         // when
