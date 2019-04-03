@@ -29,7 +29,7 @@ import java.util.*;
 
 public class Parrot {
 
-    private Map<String, String> properties = new HashMap<String, String>();
+    private final Map<String, String> properties = new HashMap<>();
 
     public static Parrot load(String... allowedFiles) {
         return new Parrot(allowedFiles);
@@ -48,7 +48,7 @@ public class Parrot {
         try {
             Files.list(Paths.get(System.getProperty("user.dir")))
                     .forEach(path -> {
-                        String fileName = path.getFileName().toString();
+                        final String fileName = path.getFileName().toString();
 
                         if (fileName.endsWith(".properties") && isAllowed(path.toFile(), allowedFiles)) {
                             ingest(path.toFile());
@@ -60,7 +60,15 @@ public class Parrot {
     }
 
     protected Parrot() {
+        // For unit tests
+    }
 
+    public Optional<String> get(String property) {
+        return Optional.ofNullable(properties.get(property));
+    }
+
+    public Map<String, String> all() {
+        return Collections.unmodifiableMap(properties);
     }
 
     private boolean isAllowed(File file, String[] allowedFiles) {
@@ -68,7 +76,7 @@ public class Parrot {
             return true;
 
         for (String allowedFile : allowedFiles) {
-            String filename = allowedFile.contains(".properties") ? allowedFile.replace(".properties", "") : allowedFile;
+            final String filename = allowedFile.contains(".properties") ? allowedFile.replace(".properties", "") : allowedFile;
             if (file.getName().replace(".properties", "").equals(filename))
                 return true;
         }
@@ -76,30 +84,19 @@ public class Parrot {
         return false;
     }
 
-    public Optional<String> get(String property) {
-        String value = properties.get(property);
-        return value != null ? Optional.of(value) : Optional.empty();
-    }
-
-    public Map<String, String> all() {
-        return new HashMap<>(properties);
-    }
-
     private void ingest(File file) {
         try {
-            Properties prop = new Properties();
+            final Properties prop = new Properties();
             prop.load(new FileInputStream(file));
-            prop.entrySet().forEach(entry -> {
-                properties.put((String) entry.getKey(), (String) entry.getValue());
-            });
+            prop.forEach((key, value) -> properties.put((String) key, (String) value));
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     private List<File> getFiles(String paths) {
-        List<File> filesList = new ArrayList<File>();
-        for (final String path : paths.split(File.pathSeparator)) {
+        final List<File> filesList = new ArrayList<File>();
+        for (String path : paths.split(File.pathSeparator)) {
             final File file = new File(path);
             if (file.isDirectory()) {
                 recurse(filesList, file);
@@ -111,7 +108,10 @@ public class Parrot {
     }
 
     private void recurse(List<File> filesList, File f) {
-        File[] list = f.listFiles();
+        final File[] list = f.listFiles();
+        if (list == null)
+            return;
+
         for (File file : list) {
             if (file.isDirectory()) {
                 recurse(filesList, file);
