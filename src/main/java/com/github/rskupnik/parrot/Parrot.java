@@ -24,10 +24,14 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.stream.Stream;
 
 public class Parrot {
+
+    private static final String PROPERTIES_EXTENSION = ".properties";
 
     private final Map<String, String> properties = new HashMap<>();
 
@@ -38,19 +42,17 @@ public class Parrot {
     private Parrot(String... allowedFiles) {
         getFiles(System.getProperty("java.class.path"))
                 .forEach(file -> {
-                            if (file.getPath().endsWith(".properties")) {
-                                if (isAllowed(file, allowedFiles))
-                                    ingest(file);
+                            if (file.getPath().endsWith(PROPERTIES_EXTENSION) && isAllowed(file, allowedFiles)) {
+                                ingest(file);
                             }
                         }
                 );
 
-        try {
-            Files.list(Paths.get(System.getProperty("user.dir")))
-                    .forEach(path -> {
+        try (Stream<Path> stream = Files.list(Paths.get(System.getProperty("user.dir")))){
+                    stream.forEach(path -> {
                         final String fileName = path.getFileName().toString();
 
-                        if (fileName.endsWith(".properties") && isAllowed(path.toFile(), allowedFiles)) {
+                        if (fileName.endsWith(PROPERTIES_EXTENSION) && isAllowed(path.toFile(), allowedFiles)) {
                             ingest(path.toFile());
                         }
                     });
@@ -76,8 +78,8 @@ public class Parrot {
             return true;
 
         for (String allowedFile : allowedFiles) {
-            final String filename = allowedFile.contains(".properties") ? allowedFile.replace(".properties", "") : allowedFile;
-            if (file.getName().replace(".properties", "").equals(filename))
+            final String filename = allowedFile.contains(PROPERTIES_EXTENSION) ? allowedFile.replace(PROPERTIES_EXTENSION, "") : allowedFile;
+            if (file.getName().replace(PROPERTIES_EXTENSION, "").equals(filename))
                 return true;
         }
 
@@ -95,7 +97,7 @@ public class Parrot {
     }
 
     private List<File> getFiles(String paths) {
-        final List<File> filesList = new ArrayList<File>();
+        final List<File> filesList = new ArrayList<>();
         for (String path : paths.split(File.pathSeparator)) {
             final File file = new File(path);
             if (file.isDirectory()) {
