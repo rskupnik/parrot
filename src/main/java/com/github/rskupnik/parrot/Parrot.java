@@ -20,39 +20,87 @@
 
 package com.github.rskupnik.parrot;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.stream.Stream;
 
+/**
+ * When {@link #load(String...)} is called, Parrot will search for <i>properties</i> files in the classpath
+ * and root directory (the directory that the application was ran from), parse them and store all properties in a single
+ * internal {@code Map} - it will then return an instance of {@link Parrot} class containing all those properties.
+ * <br><br>
+ *
+ * Having an instance of the {@link Parrot} class, properties can be accessed either using {@link #get(String)},
+ * which returns an {@code Optional}, or {@link #all()} - which returns an <b>immutable</b> copy of the {@code Map}
+ * that contains the properties.
+ */
 public class Parrot {
 
-    private Map<String, String> properties = new HashMap<String, String>();
+    private static final Logger LOGGER = LoggerFactory.getLogger(Parrot.class);
 
-    public Parrot(String... allowedFiles) {
+    private static final String PROPERTIES_EXTENSION = ".properties";
+
+    private final Map<String, String> properties = new HashMap<>();
+
+    /**
+     * Search for <i>properties</i> files in classpath and root directory (the directory that the application was ran
+     * from), parse them and store all properties in a single internal {@code Map}.
+     * @param allowedFiles - a filter of file names to be loaded, if null - all files will be loaded
+     * @return an instance of {@link Parrot} containing the loaded properties
+     */
+    public static Parrot load(String... allowedFiles) {
+        return new Parrot(allowedFiles);
+    }
+
+    private Parrot(String... allowedFiles) {
         getFiles(System.getProperty("java.class.path"))
                 .forEach(file -> {
-                            if (file.getPath().endsWith(".properties")) {
-                                if (isAllowed(file, allowedFiles))
-                                    ingest(file);
+                            if (file.getPath().endsWith(PROPERTIES_EXTENSION) && isAllowed(file, allowedFiles)) {
+                                ingest(file);
                             }
                         }
                 );
 
-        try {
-            Files.list(Paths.get(System.getProperty("user.dir")))
-                    .forEach(path -> {
-                        String fileName = path.getFileName().toString();
+        try (Stream<Path> stream = Files.list(Paths.get(System.getProperty("user.dir")))){
+                    stream.forEach(path -> {
+                        final String fileName = path.getFileName().toString();
 
-                        if (fileName.endsWith(".properties") && isAllowed(path.toFile(), allowedFiles)) {
+                        if (fileName.endsWith(PROPERTIES_EXTENSION) && isAllowed(path.toFile(), allowedFiles)) {
                             ingest(path.toFile());
                         }
                     });
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error("Error while trying to access files under user directory.", e);
         }
+    }
+
+    protected Parrot() {
+        // For unit tests
+    }
+
+    /**
+     * Retrieve a property, represented as an {@code Optional}
+     *
+     * @param property - name of the property to retrieve
+     * @return an {@code Optional} containing the property if it exists
+     */
+    public Optional<String> get(String property) {
+        return Optional.ofNullable(properties.get(property));
+    }
+
+    /**
+     * @return an <b>immutable</b> {@code Map} copy containing all the properties.
+     */
+    public Map<String, String> all() {
+        return Collections.unmodifiableMap(properties);
     }
 
     private boolean isAllowed(File file, String[] allowedFiles) {
@@ -60,41 +108,30 @@ public class Parrot {
             return true;
 
         for (String allowedFile : allowedFiles) {
-            String filename = allowedFile.contains(".properties") ? allowedFile.replace(".properties", "") : allowedFile;
-            if (file.getName().replace(".properties", "").equals(filename))
+            final String filename = allowedFile.contains(PROPERTIES_EXTENSION) ? allowedFile.replace(PROPERTIES_EXTENSION, "") : allowedFile;
+            if (file.getName().replace(PROPERTIES_EXTENSION, "").equals(filename))
                 return true;
         }
 
         return false;
     }
 
-    public Optional<String> get(String property) {
-        String value = properties.get(property);
-        return value != null ? Optional.of(value) : Optional.empty();
-    }
-
-    public Map<String, String> all() {
-        return new HashMap<>(properties);
-    }
-
     private void ingest(File file) {
         try {
-            Properties prop = new Properties();
+            final Properties prop = new Properties();
             prop.load(new FileInputStream(file));
-            prop.entrySet().forEach(entry -> {
-                properties.put((String) entry.getKey(), (String) entry.getValue());
-            });
+            prop.forEach((key, value) -> properties.put((String) key, (String) value));
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error(String.format("Error while trying to parse a .properties file: %s", file.getName()), e);
         }
     }
 
     private List<File> getFiles(String paths) {
-        List<File> filesList = new ArrayList<File>();
-        for (final String path : paths.split(File.pathSeparator)) {
+        final List<File> filesList = new ArrayList<>();
+        for (String path : paths.split(File.pathSeparator)) {
             final File file = new File(path);
             if (file.isDirectory()) {
-                recurse(filesList, file);
+                addFilesInDirectoryToList(filesList, file);
             } else {
                 filesList.add(file);
             }
@@ -102,11 +139,14 @@ public class Parrot {
         return filesList;
     }
 
-    private void recurse(List<File> filesList, File f) {
-        File list[] = f.listFiles();
+    private void addFilesInDirectoryToList(List<File> filesList, File f) {
+        final File[] list = f.listFiles();
+        if (list == null)
+            return;
+
         for (File file : list) {
             if (file.isDirectory()) {
-                recurse(filesList, file);
+                addFilesInDirectoryToList(filesList, file);
             } else {
                 filesList.add(file);
             }
