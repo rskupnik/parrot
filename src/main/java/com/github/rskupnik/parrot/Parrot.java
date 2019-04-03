@@ -31,7 +31,11 @@ public class Parrot {
 
     private Map<String, String> properties = new HashMap<String, String>();
 
-    public Parrot(String... allowedFiles) {
+    public static Parrot load(String... allowedFiles) {
+        return new Parrot(allowedFiles);
+    }
+
+    private Parrot(String... allowedFiles) {
         getFiles(System.getProperty("java.class.path"))
                 .forEach(file -> {
                             if (file.getPath().endsWith(".properties")) {
@@ -53,6 +57,10 @@ public class Parrot {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    protected Parrot() {
+
     }
 
     private boolean isAllowed(File file, String[] allowedFiles) {
@@ -103,7 +111,7 @@ public class Parrot {
     }
 
     private void recurse(List<File> filesList, File f) {
-        File list[] = f.listFiles();
+        File[] list = f.listFiles();
         for (File file : list) {
             if (file.isDirectory()) {
                 recurse(filesList, file);
