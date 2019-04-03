@@ -20,6 +20,9 @@
 
 package com.github.rskupnik.parrot;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -30,6 +33,8 @@ import java.util.*;
 import java.util.stream.Stream;
 
 public class Parrot {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(Parrot.class);
 
     private static final String PROPERTIES_EXTENSION = ".properties";
 
@@ -57,7 +62,7 @@ public class Parrot {
                         }
                     });
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error("Error while trying to access files under user directory.", e);
         }
     }
 
@@ -92,7 +97,7 @@ public class Parrot {
             prop.load(new FileInputStream(file));
             prop.forEach((key, value) -> properties.put((String) key, (String) value));
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error(String.format("Error while trying to parse a .properties file: %s", file.getName()), e);
         }
     }
 
