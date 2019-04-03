@@ -131,7 +131,7 @@ public class Parrot {
         for (String path : paths.split(File.pathSeparator)) {
             final File file = new File(path);
             if (file.isDirectory()) {
-                recurse(filesList, file);
+                addFilesInDirectoryToList(filesList, file);
             } else {
                 filesList.add(file);
             }
@@ -139,14 +139,14 @@ public class Parrot {
         return filesList;
     }
 
-    private void recurse(List<File> filesList, File f) {
+    private void addFilesInDirectoryToList(List<File> filesList, File f) {
         final File[] list = f.listFiles();
         if (list == null)
             return;
 
         for (File file : list) {
             if (file.isDirectory()) {
-                recurse(filesList, file);
+                addFilesInDirectoryToList(filesList, file);
             } else {
                 filesList.add(file);
             }
