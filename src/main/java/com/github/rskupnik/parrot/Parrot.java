@@ -32,6 +32,16 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Stream;
 
+/**
+ * When {@link #load(String...)} is called, Parrot will search for <i>properties</i> files in the classpath
+ * and root directory (the directory that the application was ran from), parse them and store all properties in a single
+ * internal {@code Map} - it will then return an instance of {@link Parrot} class containing all those properties.
+ * <br><br>
+ *
+ * Having an instance of the {@link Parrot} class, properties can be accessed either using {@link #get(String)},
+ * which returns an {@code Optional}, or {@link #all()} - which returns an <b>immutable</b> copy of the {@code Map}
+ * that contains the properties.
+ */
 public class Parrot {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Parrot.class);
@@ -40,6 +50,12 @@ public class Parrot {
 
     private final Map<String, String> properties = new HashMap<>();
 
+    /**
+     * Search for <i>properties</i> files in classpath and root directory (the directory that the application was ran
+     * from), parse them and store all properties in a single internal {@code Map}.
+     * @param allowedFiles - a filter of file names to be loaded, if null - all files will be loaded
+     * @return an instance of {@link Parrot} containing the loaded properties
+     */
     public static Parrot load(String... allowedFiles) {
         return new Parrot(allowedFiles);
     }
@@ -70,10 +86,19 @@ public class Parrot {
         // For unit tests
     }
 
+    /**
+     * Retrieve a property, represented as an {@code Optional}
+     *
+     * @param property - name of the property to retrieve
+     * @return an {@code Optional} containing the property if it exists
+     */
     public Optional<String> get(String property) {
         return Optional.ofNullable(properties.get(property));
     }
 
+    /**
+     * @return an <b>immutable</b> {@code Map} copy containing all the properties.
+     */
     public Map<String, String> all() {
         return Collections.unmodifiableMap(properties);
     }
