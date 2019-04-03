@@ -26,11 +26,10 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -175,5 +174,32 @@ public class ParrotTest {
         // then
         assertTrue(output.isPresent());
         assertEquals(anticipatedOutcome, output.get());
+    }
+
+    @Test
+    public void shouldGetAllProperties() {
+        // when
+        final Parrot parrot = Parrot.load("multitest");
+
+        // then
+        final Map<String, String> all = parrot.all();
+        assertNotNull(all);
+        assertFalse(all.isEmpty());
+        assertEquals(2, all.size());
+        assertEquals("value1", all.get("prop1"));
+        assertEquals("value2", all.get("prop2"));
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void outputMapShouldBeImmutable() {
+        // given
+        final Parrot parrot = Parrot.load("multitest");
+        final Map<String, String> all = parrot.all();
+
+        // when
+        all.put("newkey", "newval");
+
+        // then
+        fail();
     }
 }
